@@ -78,8 +78,11 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   else
+    # Ensure log directory exists before creating logger
+    log_dir = Rails.root.join('log')
+    FileUtils.mkdir_p(log_dir) unless log_dir.exist?
     config.logger    = ActiveSupport::Logger.new(
-      Rails.root.join("log/#{Rails.env}.log"),
+      log_dir.join("#{Rails.env}.log"),
       1,
       ENV.fetch('LOG_SIZE', '1024').to_i.megabytes
     )

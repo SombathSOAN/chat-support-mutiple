@@ -56,8 +56,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 WORKDIR /app
 
-# Create log directory early to prevent Rails initialization errors
-RUN mkdir -p /app/log
+# Create log and tmp directories early to prevent Rails initialization errors
+RUN mkdir -p /app/log /app/tmp
 
 COPY Gemfile Gemfile.lock ./
 
