@@ -56,6 +56,9 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 WORKDIR /app
 
+# Create log directory early to prevent Rails initialization errors
+RUN mkdir -p /app/log
+
 COPY Gemfile Gemfile.lock ./
 
 # natively compile grpc and protobuf to support alpine musl (dialogflow-docker workflow)
@@ -75,10 +78,6 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm i
 
 COPY . /app
-
-# creating a log directory so that image wont fail when RAILS_LOG_TO_STDOUT is false
-# https://github.com/chatwoot/chatwoot/issues/701
-RUN mkdir -p /app/log
 
 # generate production assets if production environment
 RUN if [ "$RAILS_ENV" = "production" ]; then \
